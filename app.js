@@ -28,7 +28,7 @@ const validateToken = async (req, res, next) => {
     const token = req.headers.authorization;
 
     // Make a request to your Python server for token validation
-    const response = await axios.post('http://127.0.0.1:8000/auth/user', null, {
+    const response = await axios.post("https://lawpedia-auth-i6pjjcb5oq-et.a.run.app/auth/user", null, {
       headers: {
         Authorization: token,
       },
