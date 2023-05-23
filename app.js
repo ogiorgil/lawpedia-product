@@ -2,8 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const app = express();
+const path = require('path');
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.connect('mongodb+srv://razaqakevin:Kevinrazaqa03@product.5ztkbvk.mongodb.net/', {
   useNewUrlParser: true,
@@ -55,7 +57,7 @@ const validateToken = async (req, res, next) => {
 
 // Create a new product
 // Create a product
-app.post('/products/create', validateToken, async (req, res) => {
+app.post('/products/create', async (req, res) => {
   try {
     const { id, username, name, price, stock, description, category } = req.body;
 
@@ -77,7 +79,7 @@ app.post('/products/create', validateToken, async (req, res) => {
 });
 
 // Update a product
-app.put('/products/update/:id', validateToken, async (req, res) => {
+app.put('/products/update/:id', async (req, res) => {
   try {
     const { username, name, price, stock, description, category } = req.body;
     const productId = req.params.id;
@@ -123,7 +125,7 @@ app.get('/products/:id', async (req, res) => {
 });
 
 // Delete a product
-app.delete('/products/delete/:id', validateToken, async (req, res) => {
+app.delete('/products/delete/:id', async (req, res) => {
   try {
     const productId = req.params.id;
     const product = await Product.findOneAndDelete({ id: productId });
@@ -136,6 +138,10 @@ app.delete('/products/delete/:id', validateToken, async (req, res) => {
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'frontend.html'));
 });
 
 const port = process.env.PORT || 3000;
